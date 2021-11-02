@@ -1,0 +1,1 @@
+{"rule": "spouse(A,B) :- child(A,C), parent(C,B).", "pool_list": [["Anne", "Bob", "Charlie", "Dave", "Erin", "Fiona", "James", "William"], ["Alice", "John", "Charles", "Dan", "Eve", "Frank", "Gary", "Paul"], ["Arthur", "Michael", "Carole", "David", "Lucy", "Jack", "Grace", "Harry"]], "rule_support": 0.8}

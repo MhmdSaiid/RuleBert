@@ -1,0 +1,18 @@
+train_data
+Testing.ipynb
+.ipynb_checkpoints
+.mypy_cache
+data/
+*.pyc
+temp
+Untitled*
+DG Test.ipynb
+lpmln
+lpmln/**
+rules_json_chaining
+old
+*.csv
+Multi_rule.json
+experiments
+scripts
+Single Rule Notebooks

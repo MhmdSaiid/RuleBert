@@ -1,0 +1,17 @@
+{"rule": ['spouse(A,B) :- child(A,C), parent(C,B).',
+        'negspouse(A,B) :- child(A,B).',
+        'spouse(A,B) :- relative(A,B).'], 
+"pool_list": [[
+              ["Anne", "Bob", "Charlie", "Dave", "Erin", "Fiona", "James", "William"], 
+              ["Alice", "John", "Charles", "Dan", "Eve", "Frank", "Gary", "Paul"], 
+              ["Arthur", "Michael", "Carole", "David", "Lucy", "Jack", "Grace", "Harry"]
+              ],
+              [
+               ["Anne", "Bob", "Charlie", "Dave", "Erin", "Fiona", "James", "William"],
+              ["Alice", "John", "Charles", "Dan", "Eve", "Frank", "Gary", "Paul"]
+              ],
+              [
+              ["Anne", "Bob", "Charlie", "Dave", "Erin", "Fiona", "James", "William"],
+              ["Alice", "John", "Charles", "Dan", "Eve", "Frank", "Gary", "Paul"]
+              ]], 
+"rule_support": [0.87,0.64,0.3]}
