@@ -50,7 +50,7 @@ class Triple:
 
         # COMPLETED: Replace by input structure sentence: The !!R!! of !!S!! is !!O!!.Inlcude negative
 
-        with open('data/rel2text.pkl', 'rb') as f:
+        with open('data_generation/data/rel2text.pkl', 'rb') as f:
             rel2text = pickle.load(f)
 
         if self.relation in rel2text:

@@ -48,22 +48,22 @@ class Rule:
     def add_rule_info(rule: str):
         # COMPLETED Update the pkl files with all rules
         """Adds rule description and predicate metadata."""
-        with open('data/rule2text.pkl', 'rb') as f:
+        with open('data_generation/data/rule2text.pkl', 'rb') as f:
             rule2text = pickle.load(f)
 
         if(rule not in rule2text):
             text = input(f'Please enter the natural language description of the rule {rule}.')
             rule2text[rule] = text
 
-            with open('data/rule2text.pkl', 'wb') as f:
+            with open('data_generation/data/rule2text.pkl', 'wb') as f:
                 pickle.dump(rule2text, f)
 
             print('Rule Description successfully added.')
 
-            with open('data/symmetric_preds_set.pkl', 'rb') as f:
+            with open('data_generation/data/symmetric_preds_set.pkl', 'rb') as f:
                 symmetric_preds_set = pickle.load(f)
 
-            with open('data/nonsymmetric_preds_set.pkl', 'rb') as f:
+            with open('data_generation/data/nonsymmetric_preds_set.pkl', 'rb') as f:
                 nonsymmetric_preds_set = pickle.load(f)
 
             rule_relations = Rule(rule).relations
@@ -76,12 +76,12 @@ class Rule:
                         text = text.lower()
                         if(text == 'y'):
                             symmetric_preds_set.add(rel)
-                            with open('data/symmetric_preds_set.pkl', 'wb') as f:
+                            with open('data_generation/data/symmetric_preds_set.pkl', 'wb') as f:
                                 pickle.dump(symmetric_preds_set, f)
 
                         elif(text == 'n'):
                             nonsymmetric_preds_set.add(rel)
-                            with open('data/nonsymmetric_preds_set.pkl', 'wb') as f:
+                            with open('data_generation/data/nonsymmetric_preds_set.pkl', 'wb') as f:
                                 pickle.dump(nonsymmetric_preds_set, f)
 
             print('Successfully added relation info.')
