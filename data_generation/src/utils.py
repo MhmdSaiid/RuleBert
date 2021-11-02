@@ -16,15 +16,15 @@ import hashlib
 
 # TODO Add DocString and Type Hinting
 
-with open('data_generation/data/rule2text.pkl', 'rb') as f:
+with open('data/rule2text.pkl', 'rb') as f:
     rule2text = pickle.load(f)
 
 # set of symmetric predicates
-with open('data_generation/data/symmetric_preds_set.pkl', 'rb') as f:
+with open('data/symmetric_preds_set.pkl', 'rb') as f:
     symmetric_preds_set = pickle.load(f)
 
 # set of nonsymmetric predicates
-with open('data_generation/data/nonsymmetric_preds_set.pkl', 'rb') as f:
+with open('data/nonsymmetric_preds_set.pkl', 'rb') as f:
     nonsymmetric_preds_set = pickle.load(f)
 
 def negate(s: str) -> str:
@@ -67,7 +67,7 @@ def symbolic2text(p: Dict[str, Any]) -> Dict[str, Any]:
     """Converts symbolic data to natural language"""
     # TODO Fix Path
     # Load pkl file containing rules in natural language
-    with open('data_generation/data/rule2text.pkl', 'rb') as file:
+    with open('data/rule2text.pkl', 'rb') as file:
         rule2text = pickle.load(file)
 
     f = [Triple(x) for x in p['facts'].split('.') if x]

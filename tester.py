@@ -8,7 +8,7 @@ from torch.nn import CrossEntropyLoss
 from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import time
-from src.utils import format_time, flat_accuracy, confidence_accuracy
+from data_generation.src.utils import format_time, flat_accuracy, confidence_accuracy
 import numpy as np
 import argparse
 

@@ -2,7 +2,13 @@ train_data
 Testing.ipynb
 .ipynb_checkpoints
 .mypy_cache
-data/
+data/chain_rules
+data/external_datasets
+data/single_rules
+data/single_502
+data/union_rules
+data/single_502.zip
+data/README.md
 *.pyc
 temp
 Untitled*
@@ -16,3 +22,15 @@ Multi_rule.json
 experiments
 scripts
 Single Rule Notebooks
+data_generation/data/generated/union/Multi_rule_20211026T101942/val.jsonl
+data_generation/data/generated/union/Multi_rule_20211026T101942/train.jsonl
+data_generation/data/generated/union/Multi_rule_20211026T101942/test.jsonl
+data_generation/data/generated/single/spouse(A,B):-child(A,C),parent(C,B)._20211026T101744/val.jsonl
+data_generation/data/generated/single/spouse(A,B):-child(A,C),parent(C,B)._20211026T101744/train.jsonl
+data_generation/data/generated/single/spouse(A,B):-child(A,C),parent(C,B)._20211026T101744/test.jsonl
+data_generation/data/generated/single/spouse(A,B):-child(A,B)._20211026T101712/val.jsonl
+data_generation/data/generated/single/spouse(A,B):-child(A,B)._20211026T101712/train.jsonl
+data_generation/data/generated/single/spouse(A,B):-child(A,B)._20211026T101712/test.jsonl
+data_generation/data/generated/chain/chain_rules_20211026T102041/val.jsonl
+data_generation/data/generated/chain/chain_rules_20211026T102041/train.jsonl
+data_generation/data/generated/chain/chain_rules_20211026T102041/test.jsonl

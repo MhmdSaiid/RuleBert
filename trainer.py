@@ -15,7 +15,7 @@ from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from copy import deepcopy
 import time
-from src.utils import format_time, flat_accuracy, confidence_accuracy
+from data_generation.src.utils import format_time, flat_accuracy, confidence_accuracy
 
 import argparse
 
