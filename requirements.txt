@@ -1,17 +1,9 @@
 clingo==5.5.0.post3
 clyngor==0.3.31
 Cython==0.29.24
-fairseq==0.10.2
-lama==0.4
-matplotlib==3.3.2
 numpy==1.19.2
-packages==0.1.0
-pip==20.0.2
-ply==3.11
-pytest==6.1.2
 scikit_learn==1.0.1
 scipy==1.5.3
-setuptools==45.2.0
 sympy==1.9
 tqdm==4.52.0
 transformers==4.6.0
