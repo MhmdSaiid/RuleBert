@@ -9,10 +9,10 @@ python trainer.py --data_dir "$path"/ \
                 --epochs 3 \
                 --verbose
 
-$model_name = $(ls models/| tail -1)
+model_name=$(ls models/| tail -1)
 
 python tester.py --test_data_dir "$path"/ \
-                --model_dir models/"$model_name" \
+                --model_dir models/$"{model_name}" \
                 --verbose
 
 echo "Finished training and testing.\n"

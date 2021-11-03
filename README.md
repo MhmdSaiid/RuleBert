@@ -3,6 +3,11 @@
 [RuleBERT](https://arxiv.org/pdf/2109.13006.pdf) is pre-trained language model that has been fine-tuned on soft logical results . This repo contains the required code for running the experiments of the associated paper.
 
 ## Installation
+### 0. Clone Repo
+```bash
+git clone https://github.com/MhmdSaiid/RuleBert
+cd RuleBERT
+```
 
 ### 1. Create virtual env and install reqs
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
