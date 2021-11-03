@@ -33,6 +33,11 @@ my_parser.add_argument('--batch_size',
                        default=16,
                        help='batch size')
 
+my_parser.add_argument('--hard_rule',
+                       action='store_true',
+                       default=False,
+                       help='Hard Rule')
+
 my_parser.add_argument('--verbose',
                        action='store_true',
                        default=False,
@@ -45,6 +50,7 @@ test_file_dir = args.test_data_dir  # 'test_data/test.json'
 model_path = args.model_dir  # 'model/'
 max_length = args.max_length  # 512
 batch_size = args.batch_size  # 16
+hard_rule = args.hard_rule  # False
 verbose = args.verbose
 
 # LOAD DATA
@@ -55,7 +61,8 @@ test_theories = [json.loads(jline) for jline in open(test_file, "r").read().spli
 test_context = [t['context'] for t in test_theories]
 test_hypotheses = [t['hypothesis_sentence'] for t in test_theories]
 test_labels_ = [1 if t['output'] else 0 for t in test_theories]
-test_data_weights_ = [t['hyp_weight'] for t in test_theories]
+if args.hard_rule:
+    test_data_weights_ = [t['hyp_weight'] for t in test_theories]
 
 # Load tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -78,9 +85,14 @@ test_input_ids = torch.cat(test_input_ids_, dim=0)
 test_attention_masks = torch.cat(test_attention_masks_, dim=0)
 
 test_labels = torch.tensor(test_labels_)
-test_data_weights = torch.tensor(test_data_weights_)
+if args.hard_rule:
+    test_data_weights = torch.tensor(test_data_weights_)
 
-test_dataset = TensorDataset(test_input_ids, test_attention_masks, test_labels, test_data_weights)
+if args.hard_rule:
+
+    test_dataset = TensorDataset(test_input_ids, test_attention_masks, test_labels, test_data_weights)
+else:
+    test_dataset = TensorDataset(test_input_ids, test_attention_masks, test_labels)
 
 test_dataloader = DataLoader(dataset=test_dataset,
                              sampler=SequentialSampler(test_dataset),
@@ -109,24 +121,34 @@ for batch in tqdm(test_dataloader):
     b_input_ids = batch[0].to(device)
     b_input_mask = batch[1].to(device)
     b_labels = batch[2].to(device)
-    b_weights = batch[3].to(device)
+    if args.hard_rule:
+        b_weights = batch[3].to(device)
 
     with torch.no_grad():
-        o = model(b_input_ids, attention_mask=b_input_mask)
+        if args.hard_rule:
+            o = model(b_input_ids, attention_mask=b_input_mask)
+        else:
+            o = model(b_input_ids, 
+                          attention_mask=b_input_mask, 
+                          labels=b_labels)
 
-    logits = o[0]
-    loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
 
+    logits = o.logits
+
+    if args.hard_rule:
+        loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
+    else:
+        loss = o.loss
     total_test_loss += loss.item()
 
     logits = logits.detach().cpu().numpy()
     label_ids = b_labels.to('cpu').numpy()
 
     total_test_accuracy += flat_accuracy(logits, label_ids)
-    probs, diff = confidence_accuracy(logits, b_labels, b_weights, verbose=verbose)
-    # COMPLETED add tolist()
-    all_probs.extend(probs.tolist())
-    all_diff.extend(diff.tolist())
+    if args.hard_rule:
+        probs, diff = confidence_accuracy(logits, b_labels, b_weights, verbose=verbose)
+        all_probs.extend(probs.tolist())
+        all_diff.extend(diff.tolist())
 avg_test_accuracy = total_test_accuracy / len(test_dataloader)
 
 print("  Accuracy: {}".format(avg_test_accuracy))
@@ -151,21 +173,24 @@ print("")
 print("Testing complete!")
 
 print("Total testing took {:} (h:mm:ss)".format(test_time))
-test_stats.append({'probs': all_probs,
-                   'diff': all_diff,
-                   'test_data_dir': test_file_dir,
-                   'max_length': max_length,
-                   'batch_size': batch_size})
 
-diffs = np.array(test_stats[1]['diff'])
-ca_001 = sum(diffs < 0.01) / len(diffs)
-ca_005 = sum(diffs < 0.05) / len(diffs)
-ca_01 = sum(diffs < 0.1) / len(diffs)
-ca_015 = sum(diffs < 0.15) / len(diffs)
+test_stats.append({'test_data_dir': test_file_dir,
+                'max_length': max_length,
+                'batch_size': batch_size})
 
-test_stats[0]['CA@0.01'] = ca_001
-test_stats[0]['CA@0.05'] = ca_005
-test_stats[0]['CA@0.1'] = ca_01
-test_stats[0]['CA@0.15'] = ca_015
+if args.hard_rule:
+    test_stats.append({'probs': all_probs,
+                    'diff': all_diff})
+
+    diffs = np.array(test_stats[1]['diff'])
+    ca_001 = sum(diffs < 0.01) / len(diffs)
+    ca_005 = sum(diffs < 0.05) / len(diffs)
+    ca_01 = sum(diffs < 0.1) / len(diffs)
+    ca_015 = sum(diffs < 0.15) / len(diffs)
+
+    test_stats[0]['CA@0.01'] = ca_001
+    test_stats[0]['CA@0.05'] = ca_005
+    test_stats[0]['CA@0.1'] = ca_01
+    test_stats[0]['CA@0.15'] = ca_015
 
 json.dump(test_stats, open(f"{model_path}/test_stats.json", "w"), indent=4)

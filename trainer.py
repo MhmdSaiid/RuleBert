@@ -76,6 +76,11 @@ my_parser.add_argument('--verbose',
                        default=False,
                        help='Verbose Output')
 
+my_parser.add_argument('--hard_rule',
+                       action='store_true',
+                       default=False,
+                       help='Hard Rule')
+
 my_parser.add_argument('--time_step_size',
                        type=int,
                        default=100,
@@ -94,6 +99,7 @@ weight_decay = args.weight_decay  # 0.1
 epochs = args.epochs  # 3
 warmup_ratio = args.warmup_ratio  # 0.06
 verbose = args.verbose  # True
+hard_rule = args.hard_rule  # False
 time_step_size = args.time_step_size  # 100
 
 
@@ -118,29 +124,38 @@ train_theories_1 = [json.loads(jline) for jline in open(train_file, "r").read().
 val_theories = [json.loads(jline) for jline in open(val_file, "r").read().splitlines()]
 
 # UPDATE DATA FOR wBCE
-for x in tqdm(train_theories_1):
-    if(not x['output']):
-        x['hyp_weight'] = 1 - x['hyp_weight']
-train_theories_1 = sample(train_theories_1, len(train_theories_1))
-train_theories_2 = deepcopy(train_theories_1)
-for x in tqdm(train_theories_2):
-    x['output'] = False if x['output'] else True
-    x['hyp_weight'] = 1 - x['hyp_weight']
+if not args.hard_rule:
+    for x in tqdm(train_theories_1):
+        if(not x['output']):
+            x['hyp_weight'] = 1 - x['hyp_weight']
 
-train_theories = cast(List[Dict[Any, Any]], [item for sublist
-                      in list(map(list, zip(train_theories_1, train_theories_2))) for item in sublist])
+train_theories_1 = sample(train_theories_1, len(train_theories_1))
+
+if not args.hard_rule:
+
+    train_theories_2 = deepcopy(train_theories_1)
+    for x in tqdm(train_theories_2):
+        x['output'] = False if x['output'] else True
+        x['hyp_weight'] = 1 - x['hyp_weight']
+
+    train_theories = cast(List[Dict[Any, Any]], [item for sublist
+                        in list(map(list, zip(train_theories_1, train_theories_2))) for item in sublist])
+else:
+    train_theories = train_theories_1
 
 # prepare training data
 train_context = [t['context'] for t in train_theories]
 train_hypotheses = [t['hypothesis_sentence'] for t in train_theories]
 train_labels_ = [1 if t['output'] else 0 for t in train_theories]
-train_data_weights_ = [t['hyp_weight'] for t in train_theories]
+if not args.hard_rule:
+    train_data_weights_ = [t['hyp_weight'] for t in train_theories]
 
 # prepare val data
 val_context = [t['context'] for t in val_theories]
 val_hypotheses = [t['hypothesis_sentence'] for t in val_theories]
 val_labels_ = [1 if t['output'] else 0 for t in val_theories]
-val_data_weights_ = [t['hyp_weight'] for t in val_theories]
+if not args.hard_rule:
+    val_data_weights_ = [t['hyp_weight'] for t in val_theories]
 
 # Load tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_arch)
@@ -163,10 +178,13 @@ train_input_ids = torch.cat(train_input_ids_, dim=0)
 train_attention_masks = torch.cat(train_attention_masks_, dim=0)
 
 train_labels = torch.tensor(train_labels_)
-train_data_weights = torch.tensor(train_data_weights_)
 
-train_dataset = TensorDataset(train_input_ids, train_attention_masks, train_labels, train_data_weights)
+if not args.hard_rule:
+    train_data_weights = torch.tensor(train_data_weights_)
+    train_dataset = TensorDataset(train_input_ids, train_attention_masks, train_labels, train_data_weights)
 
+else:
+    train_dataset = TensorDataset(train_input_ids, train_attention_masks, train_labels)
 
 # tokenize val data
 val_input_ids_ = []
@@ -185,9 +203,12 @@ val_input_ids = torch.cat(val_input_ids_, dim=0)
 val_attention_masks = torch.cat(val_attention_masks_, dim=0)
 
 val_labels = torch.tensor(val_labels_)
-val_data_weights = torch.tensor(val_data_weights_)
+if not args.hard_rule:
+    val_data_weights = torch.tensor(val_data_weights_)
+    val_dataset = TensorDataset(val_input_ids, val_attention_masks, val_labels, val_data_weights)
 
-val_dataset = TensorDataset(val_input_ids, val_attention_masks, val_labels, val_data_weights)
+else:
+    val_dataset = TensorDataset(val_input_ids, val_attention_masks, val_labels)
 
 train_dataloader = DataLoader(dataset=train_dataset,
                               sampler=SequentialSampler(train_dataset),
@@ -245,15 +266,24 @@ for epoch_i in range(epochs):
         b_input_ids = batch[0].to(device)
         b_input_mask = batch[1].to(device)
         b_labels = batch[2].to(device)
-        b_weights = batch[3].to(device)
+        if not args.hard_rule:
+            b_weights = batch[3].to(device)
 
         model.zero_grad()
+        if not args.hard_rule:
+            o = model(b_input_ids,
+                    attention_mask=b_input_mask)
+        else:
+            o = model(b_input_ids, 
+                      attention_mask=b_input_mask, 
+                      labels=b_labels)
 
-        o = model(b_input_ids,
-                  attention_mask=b_input_mask)
+        logits = o.logits
 
-        logits = o[0]
-        loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
+        if not args.hard_rule:
+            loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
+        else:
+            loss = o.loss
 
         total_train_loss += loss.item()
 
@@ -294,13 +324,23 @@ for epoch_i in range(epochs):
         b_input_ids = batch[0].to(device)
         b_input_mask = batch[1].to(device)
         b_labels = batch[2].to(device)
-        b_weights = batch[3].to(device)
+        if not args.hard_rule:
+            b_weights = batch[3].to(device)
 
         with torch.no_grad():
-            o = model(b_input_ids, attention_mask=b_input_mask)
+            if not args.hard_rule:
+                o = model(b_input_ids, attention_mask=b_input_mask)
+            else:
+                o = model(b_input_ids, 
+                          attention_mask=b_input_mask, 
+                          labels=b_labels)
 
-        logits = o[0]
-        loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
+
+        logits = o.logits
+        if not args.hard_rule:
+            loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
+        else:
+            loss = o.loss
 
         total_eval_loss += loss.item()
 
