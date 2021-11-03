@@ -61,7 +61,7 @@ test_theories = [json.loads(jline) for jline in open(test_file, "r").read().spli
 test_context = [t['context'] for t in test_theories]
 test_hypotheses = [t['hypothesis_sentence'] for t in test_theories]
 test_labels_ = [1 if t['output'] else 0 for t in test_theories]
-if args.hard_rule:
+if not hard_rule:
     test_data_weights_ = [t['hyp_weight'] for t in test_theories]
 
 # Load tokenizer
@@ -85,10 +85,10 @@ test_input_ids = torch.cat(test_input_ids_, dim=0)
 test_attention_masks = torch.cat(test_attention_masks_, dim=0)
 
 test_labels = torch.tensor(test_labels_)
-if args.hard_rule:
+if not hard_rule:
     test_data_weights = torch.tensor(test_data_weights_)
 
-if args.hard_rule:
+if not hard_rule:
 
     test_dataset = TensorDataset(test_input_ids, test_attention_masks, test_labels, test_data_weights)
 else:
@@ -121,11 +121,11 @@ for batch in tqdm(test_dataloader):
     b_input_ids = batch[0].to(device)
     b_input_mask = batch[1].to(device)
     b_labels = batch[2].to(device)
-    if args.hard_rule:
+    if not hard_rule:
         b_weights = batch[3].to(device)
 
     with torch.no_grad():
-        if args.hard_rule:
+        if not hard_rule:
             o = model(b_input_ids, attention_mask=b_input_mask)
         else:
             o = model(b_input_ids, 
@@ -135,7 +135,7 @@ for batch in tqdm(test_dataloader):
 
     logits = o.logits
 
-    if args.hard_rule:
+    if not hard_rule:
         loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
     else:
         loss = o.loss
@@ -145,7 +145,7 @@ for batch in tqdm(test_dataloader):
     label_ids = b_labels.to('cpu').numpy()
 
     total_test_accuracy += flat_accuracy(logits, label_ids)
-    if args.hard_rule:
+    if not hard_rule:
         probs, diff = confidence_accuracy(logits, b_labels, b_weights, verbose=verbose)
         all_probs.extend(probs.tolist())
         all_diff.extend(diff.tolist())
@@ -178,11 +178,11 @@ test_stats.append({'test_data_dir': test_file_dir,
                 'max_length': max_length,
                 'batch_size': batch_size})
 
-if args.hard_rule:
+if not hard_rule:
     test_stats.append({'probs': all_probs,
                     'diff': all_diff})
 
-    diffs = np.array(test_stats[1]['diff'])
+    diffs = np.array(test_stats[2]['diff'])
     ca_001 = sum(diffs < 0.01) / len(diffs)
     ca_005 = sum(diffs < 0.05) / len(diffs)
     ca_01 = sum(diffs < 0.1) / len(diffs)

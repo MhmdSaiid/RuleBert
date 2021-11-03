@@ -124,14 +124,14 @@ train_theories_1 = [json.loads(jline) for jline in open(train_file, "r").read().
 val_theories = [json.loads(jline) for jline in open(val_file, "r").read().splitlines()]
 
 # UPDATE DATA FOR wBCE
-if not args.hard_rule:
+if not hard_rule:
     for x in tqdm(train_theories_1):
         if(not x['output']):
             x['hyp_weight'] = 1 - x['hyp_weight']
 
 train_theories_1 = sample(train_theories_1, len(train_theories_1))
 
-if not args.hard_rule:
+if not hard_rule:
 
     train_theories_2 = deepcopy(train_theories_1)
     for x in tqdm(train_theories_2):
@@ -147,14 +147,14 @@ else:
 train_context = [t['context'] for t in train_theories]
 train_hypotheses = [t['hypothesis_sentence'] for t in train_theories]
 train_labels_ = [1 if t['output'] else 0 for t in train_theories]
-if not args.hard_rule:
+if not hard_rule:
     train_data_weights_ = [t['hyp_weight'] for t in train_theories]
 
 # prepare val data
 val_context = [t['context'] for t in val_theories]
 val_hypotheses = [t['hypothesis_sentence'] for t in val_theories]
 val_labels_ = [1 if t['output'] else 0 for t in val_theories]
-if not args.hard_rule:
+if not hard_rule:
     val_data_weights_ = [t['hyp_weight'] for t in val_theories]
 
 # Load tokenizer
@@ -179,7 +179,7 @@ train_attention_masks = torch.cat(train_attention_masks_, dim=0)
 
 train_labels = torch.tensor(train_labels_)
 
-if not args.hard_rule:
+if not hard_rule:
     train_data_weights = torch.tensor(train_data_weights_)
     train_dataset = TensorDataset(train_input_ids, train_attention_masks, train_labels, train_data_weights)
 
@@ -203,7 +203,7 @@ val_input_ids = torch.cat(val_input_ids_, dim=0)
 val_attention_masks = torch.cat(val_attention_masks_, dim=0)
 
 val_labels = torch.tensor(val_labels_)
-if not args.hard_rule:
+if not hard_rule:
     val_data_weights = torch.tensor(val_data_weights_)
     val_dataset = TensorDataset(val_input_ids, val_attention_masks, val_labels, val_data_weights)
 
@@ -266,11 +266,11 @@ for epoch_i in range(epochs):
         b_input_ids = batch[0].to(device)
         b_input_mask = batch[1].to(device)
         b_labels = batch[2].to(device)
-        if not args.hard_rule:
+        if not hard_rule:
             b_weights = batch[3].to(device)
 
         model.zero_grad()
-        if not args.hard_rule:
+        if not hard_rule:
             o = model(b_input_ids,
                     attention_mask=b_input_mask)
         else:
@@ -280,7 +280,7 @@ for epoch_i in range(epochs):
 
         logits = o.logits
 
-        if not args.hard_rule:
+        if not hard_rule:
             loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
         else:
             loss = o.loss
@@ -324,11 +324,11 @@ for epoch_i in range(epochs):
         b_input_ids = batch[0].to(device)
         b_input_mask = batch[1].to(device)
         b_labels = batch[2].to(device)
-        if not args.hard_rule:
+        if not hard_rule:
             b_weights = batch[3].to(device)
 
         with torch.no_grad():
-            if not args.hard_rule:
+            if not hard_rule:
                 o = model(b_input_ids, attention_mask=b_input_mask)
             else:
                 o = model(b_input_ids, 
@@ -337,7 +337,7 @@ for epoch_i in range(epochs):
 
 
         logits = o.logits
-        if not args.hard_rule:
+        if not hard_rule:
             loss = torch.mean(loss_fct(logits.view(-1, 2), b_labels.view(-1)) * b_weights)
         else:
             loss = o.loss
@@ -348,9 +348,11 @@ for epoch_i in range(epochs):
         label_ids = b_labels.to('cpu').numpy()
 
         total_eval_accuracy += flat_accuracy(logits, label_ids)
-        total_conf_acc += confidence_accuracy(logits, b_labels, b_weights)
-    avg_val_accuracy = total_eval_accuracy / len(val_dataloader)
-    avg_val_conf_acc = total_conf_acc / len(val_dataloader)
+        avg_val_accuracy = total_eval_accuracy / len(val_dataloader)
+
+        if not hard_rule:
+            total_conf_acc += confidence_accuracy(logits, b_labels, b_weights)
+            avg_val_conf_acc = total_conf_acc / len(val_dataloader)
 
     print("  Accuracy: {}".format(avg_val_accuracy))
 
@@ -368,10 +370,16 @@ for epoch_i in range(epochs):
             'Valid. Loss': avg_val_loss,
             'Valid. Accur.': avg_val_accuracy,
             'Training Time': training_time,
-            'Validation Time': validation_time,
-            'Val_Conf_Acc': avg_val_conf_acc
+            'Validation Time': validation_time        
         }
     )
+
+    if not hard_rule:
+        training_stats.append(
+            {
+                'Val_Conf_Acc': avg_val_conf_acc
+            }
+        )
 
 total_train_time = format_time(time.time() - total_t0)
 training_stats.append({'total_train_time': total_train_time})
