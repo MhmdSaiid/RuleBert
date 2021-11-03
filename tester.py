@@ -125,8 +125,8 @@ for batch in tqdm(test_dataloader):
     total_test_accuracy += flat_accuracy(logits, label_ids)
     probs, diff = confidence_accuracy(logits, b_labels, b_weights, verbose=verbose)
     # COMPLETED add tolist()
-    all_probs.extend(probs)
-    all_diff.extend(diff)
+    all_probs.extend(probs.tolist())
+    all_diff.extend(diff.tolist())
 avg_test_accuracy = total_test_accuracy / len(test_dataloader)
 
 print("  Accuracy: {}".format(avg_test_accuracy))
@@ -168,4 +168,4 @@ test_stats[0]['CA@0.05'] = ca_005
 test_stats[0]['CA@0.1'] = ca_01
 test_stats[0]['CA@0.15'] = ca_015
 
-json.dump(test_stats, open(f"{model_path}test_stats.json", "w"), indent=4)
+json.dump(test_stats, open(f"{model_path}/test_stats.json", "w"), indent=4)

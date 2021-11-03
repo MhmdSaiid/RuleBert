@@ -8,6 +8,7 @@ data/single_rules
 data/single_502
 data/union_rules
 data/single_502.zip
+data/generated
 data/README.md
 *.pyc
 temp
@@ -19,7 +20,6 @@ rules_json_chaining
 old
 *.csv
 Multi_rule.json
-experiments
 scripts
 Single Rule Notebooks
 data_generation/data/generated/union/Multi_rule_20211026T101942/val.jsonl

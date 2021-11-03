@@ -117,7 +117,7 @@ def solve_LPMLN(facts: str, rule: str, rule_support: float, complementary_rules:
     Returns:
         Dict[str, str]: dict where key is predicate and value is probability of being satisfied
     """
-    lpmln_path = "lpmln"
+    lpmln_path = "data_generation/lpmln"
     facts = facts.replace('(', '("').replace(',', '","').replace(')', '")')
     weight = np.log((rule_support + 1e-308) / (1 - rule_support + 1e-308))
 

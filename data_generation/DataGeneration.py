@@ -54,7 +54,7 @@ class OneRuleDataGenerator:
         """
 
         # load set of symmetric predicates
-        with open('data/symmetric_preds_set.pkl', 'rb') as f:
+        with open('data_generation/data/symmetric_preds_set.pkl', 'rb') as f:
             symmetric_preds_set = pickle.load(f)
 
         rp = Rule(self.rule)  # Rule Parser
@@ -405,7 +405,7 @@ class MultiRuleDataGenerator:
         """
 
         #  set of symmetric predicates
-        with open('data/symmetric_preds_set.pkl', 'rb') as f:
+        with open('data_generation/data/symmetric_preds_set.pkl', 'rb') as f:
             symmetric_preds_set = pickle.load(f)
 
         # get rule masks: binary indicators of which rules to trigger
@@ -714,7 +714,7 @@ class ChainedRulesDataGenerator:
         """
 
         #  set of symmetric predicates
-        with open('data/symmetric_preds_set.pkl', 'rb') as f:
+        with open('data_generation/data/symmetric_preds_set.pkl', 'rb') as f:
             symmetric_preds_set = pickle.load(f)
 
         rps = [Rule(rule) for rule in self.rules]

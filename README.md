@@ -18,63 +18,26 @@ dkkfkf
 ```
 
 ## Run Experiments
-### i) Single Rule
-To fine-tune the model, run:
+When an experiemnt is complete, the model, the tokenizer, and the results are sastoredved in `models/**timestamp**`.
+### i) Single Rules
 ```bash
-# train
-python trainer.py --data-dir data/R1/
-                  --val_ratio 0.3
-                  --epochs 3
-                  --verbose
+bash experiments/single_rules/SR.sh data/single_rules 
 ```
-When complete, the model and tokenizer are saved in `models/**timestamp**`.
 
-To test the model, run:
-```bash
-# test
-python tester.py --test_data_dir data/test_R1/
-                 --model_dir models/**timestamp**
-                 --verbose
-```
-A `JSON` file will be saved in `model_dir` containing the results.
 ### ii) Rule Union Experiment
 ```bash
-
-# join data of single and multi rules
-python join.py data/single/ data/multi
-
-# train
-python trainer.py --data-dir data/combined/
-                  --val_ratio 0.3
-                  --epochs 3
-                  --verbose
-
-python tester.py --test_data_dir data/combined/
-                 --model_dir models/**timestamp**
-                 --verbose
+bash experiments/union_rules/UR.sh data/union_rules 
 ```
 
 ### iii) Rule Chain Experiment
 ```bash
-python trainer.py --data-dir data/chain/d5
-                  --epochs 3
-                  --verbose
-
-python tester.py --test_data_dir data/chain/d5
-                 --model_dir models/**timestamp**
-                 --verbose
+bash experiments/chain_rules/CR.sh data/chain_rules 
 ```
-### iv) Unseen Rules Experiment
-```bash
-python trainer.py --data-dir data/seen_rules/
-                  --epochs 3
-                  --verbose
 
-python tester.py --test_data_dir data/unseen_rules/
-                 --model_dir models/**timestamp**
-                 --verbose
-```
-### v) External Datasets
+### iv) External Datasets
+* [__CheckList__](experiments/external_datasets/CheckList/README.md)
+* [__bAbI__](experiments/external_datasets/bAbI/README.md)
+* [__Negated LAMA__](experiments/external_datasets/negated_lama/README.md)
 <!-- 
 * __CheckList__: We refer users to the Checklist repository[insert link]. We first fine-tune model on a set of pre-defined rules that would help in QQP.
  ```bash
@@ -141,6 +104,27 @@ python DataGeneration.py --rule_json chain_rules.json
                          --type chain
 ```
 The chain depth defaults to 5 `--chain_depth 5`.
+
+## Train your Own Model
+
+To fine-tune the model, run:
+```bash
+# train
+python trainer.py --data-dir data/R1/
+                  --epochs 3
+                  --verbose
+```
+When complete, the model and tokenizer are saved in `models/**timestamp**`.
+
+To test the model, run:
+```bash
+# test
+python tester.py --test_data_dir data/test_R1/
+                 --model_dir models/**timestamp**
+                 --verbose
+```
+A `JSON` file will be saved in `model_dir` containing the results.
+
 
 ## Contact Us
 For any inquiries, feel free to [contact us](mailto:saeedm@eurecom.fr), or raise an issue on Github.
