@@ -1,6 +1,16 @@
-# RuleBERT
+# RuleBERT: Teaching Soft Rules to Pre-Trained Language Models
+[(Paper)](https://arxiv.org/pdf/2109.13006.pdf)
+[(Slides)](https://docs.google.com/presentation/d/1UHOJmNlRx4OiF4-hkHMqIZ1Y9Q3QEQS5XWTaxRop4pc/edit?usp=sharing)
+[(Video)](https://youtu.be/zTnA9IOIJ8k)
+
+![RuleBERT reasons over Natural Language](RuleBERT_git_image.png)
+
 
 [RuleBERT](https://arxiv.org/pdf/2109.13006.pdf) is pre-trained language model that has been fine-tuned on soft logical results . This repo contains the required code for running the experiments of the associated paper.
+
+
+
+
 
 ## Installation
 ### 0. Clone Repo
@@ -18,6 +28,12 @@ pip install -r requirements.txt
 
 ### 2. Download Data
 The datasets can be found [here](https://zenodo.org/record/5644677#.YYOQ3nVKhuU).
+ (DISCLAIMER: ~25 GB on disk)
+
+You can also run:
+```bash
+bash download_datasets.sh
+```
 
 ## Run Experiments
 When an experiemnt is complete, the model, the tokenizer, and the results are stored in `models/**timestamp**`.
@@ -138,8 +154,8 @@ You can cite our work:
 ```
 @inproceedings{saeed2021RuleBERT,
   title={RuleBERT: Teaching Soft Rules to Pre-Trained Language Models},
-  author={M. Saeed, N. Ahmadi, P. Nakov, P. Papotti},
-  booktitle={In: Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP), 2021},
+  author={Mohammed Saeed, Naser Ahmadi, Prelav Nakov, Paolo Papotti},
+  booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP), 2021},
   year={2021}
 }
 ```
