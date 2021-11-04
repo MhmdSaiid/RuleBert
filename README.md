@@ -6,7 +6,7 @@
 ![RuleBERT reasons over Natural Language](RuleBERT_git_image.png)
 
 
-[RuleBERT](https://arxiv.org/pdf/2109.13006.pdf) is pre-trained language model that has been fine-tuned on soft logical results . This repo contains the required code for running the experiments of the associated paper.
+[RuleBERT](https://arxiv.org/pdf/2109.13006.pdf) is a pre-trained language model that has been fine-tuned on soft logical results. This repo contains the required code for running the experiments of the associated paper.
 
 
 
