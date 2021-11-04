@@ -9,7 +9,9 @@ data/single_502
 data/union_rules
 data/single_502.zip
 data/generated
+data/bAbI
 data/README.md
+data/RuleBERT_Datasets.zip
 *.pyc
 temp
 Untitled*

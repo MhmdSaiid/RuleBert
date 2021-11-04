@@ -10,7 +10,6 @@ cd RuleBERT
 ```
 
 ### 1. Create virtual env and install reqs
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
 ```bash
 (optional) virtualenv -m python RuleBERT
@@ -18,12 +17,10 @@ pip install -r requirements.txt
 ```
 
 ### 2. Download Data
-```bash
-dkkfkf
-```
+The datasets can be found [here](https://zenodo.org/record/5644677#.YYOQ3nVKhuU).
 
 ## Run Experiments
-When an experiemnt is complete, the model, the tokenizer, and the results are sastoredved in `models/**timestamp**`.
+When an experiemnt is complete, the model, the tokenizer, and the results are stored in `models/**timestamp**`.
 ### i) Single Rules
 ```bash
 bash experiments/single_rules/SR.sh data/single_rules 

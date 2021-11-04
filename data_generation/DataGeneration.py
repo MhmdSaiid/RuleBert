@@ -13,7 +13,7 @@ from pathlib import Path
 from src.utils import get_hash
 from sklearn.model_selection import train_test_split
 # COMPLETED Add Chaining
-# TODO Add code for running exps
+# COMPLETED Add code for running exps
 # TODO Type Hinting
 # COMPLETED Add CLI
 # TODO add __init__.py
