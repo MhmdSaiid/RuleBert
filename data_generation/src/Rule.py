@@ -37,7 +37,6 @@ class Rule:
         self.relations = [x.relation for x in self.triples]
 
     def set_pool_dict(self, pool_list: List[List[str]]):
-        # TODO Add Error here
         assert(len(pool_list) == self.num_vars)
         self.pool_dict = dict(zip(self.vars, pool_list))
 
@@ -46,7 +45,6 @@ class Rule:
 
     @staticmethod
     def add_rule_info(rule: str):
-        # COMPLETED Update the pkl files with all rules
         """Adds rule description and predicate metadata."""
         with open('data_generation/data/rule2text.pkl', 'rb') as f:
             rule2text = pickle.load(f)
@@ -104,8 +102,6 @@ class Rule:
             rs.append(g + '.')
         return rs
 
-    # COMPLETED Check this too
-    # COMPLETED Fix Type Hint
     def random_sample_with_assignment(self, name_pool_dict: Dict[str, List[str]]) \
             -> Tuple[List[str], Dict[str, str]]:
 

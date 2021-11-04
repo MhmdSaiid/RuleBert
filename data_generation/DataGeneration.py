@@ -12,10 +12,7 @@ import ast
 from pathlib import Path
 from src.utils import get_hash
 from sklearn.model_selection import train_test_split
-# COMPLETED Add Chaining
-# COMPLETED Add code for running exps
 # TODO Type Hinting
-# COMPLETED Add CLI
 # TODO add __init__.py
 # TODO Remove printed output from LPMLN
 
@@ -450,7 +447,6 @@ class MultiRuleDataGenerator:
             for rp in rps:
                 rp_n_pool = []
                 for h in rp.body:
-                    # TODO adjust generator
                     rp_n_pool.append(list(product(rp.pool_dict[h.subject], rp.pool_dict[h.object])))
                 all_n_pools.append(rp_n_pool)
 

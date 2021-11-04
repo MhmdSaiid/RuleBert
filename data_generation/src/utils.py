@@ -65,7 +65,6 @@ def my_shuffle(array):
 
 def symbolic2text(p: Dict[str, Any]) -> Dict[str, Any]:
     """Converts symbolic data to natural language"""
-    # TODO Fix Path
     # Load pkl file containing rules in natural language
     with open('data_generation/data/rule2text.pkl', 'rb') as file:
         rule2text = pickle.load(file)
@@ -99,8 +98,6 @@ def find_conflicting_facts(x: List[str]) -> bool:
 
 def switch(triple: str) -> str:
     return Triple(triple).switch_subj_obj()
-# TODO Update path
-# TODO Customize RuntimeErrors
 def solve_LPMLN(facts: str, rule: str, rule_support: float, complementary_rules: str) -> Dict[str, str]:
     """Solves program using LPMLN.
 
@@ -163,7 +160,6 @@ def solve_LPMLN_multi(facts: str, rules: List[str], rule_supports: List[float], 
         Dict[str, str]: dict where key is predicate and value is probability of being satisfied
     """
 
-    # TODO fix path
     lpmln_path = os.getcwd() + '/' + "lpmln"
     facts = facts.replace('(', '("').replace(',', '","').replace(')', '")')
 
@@ -202,7 +198,6 @@ def solve_LPMLN_multi(facts: str, rules: List[str], rule_supports: List[float], 
 
 def get_proba_lpmln(parsed_output: Dict[str, str], hypothesis: str) -> float:
     """Return probability given by LPMLN solver for a predicate"""
-    # TODO Check if fixed
     # remove quotations
     if('"' not in hypothesis):
         hypothesis = hypothesis.replace('(', '("').replace(',', '","').replace(')', '")')

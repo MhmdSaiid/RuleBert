@@ -40,15 +40,12 @@ class Triple:
         """Generate space of all atoms given lists of subjects and objects for input predicate"""
         subj_pool = name_pool_dict[self.subject]
         obj_pool = name_pool_dict[self.object]
-        # TODO Can this be optimized
         name_perms = list(product(subj_pool, obj_pool))
         pos_gr_triples = [self.ground(x[0], x[1]) for x in name_perms]
         atom_space = pos_gr_triples + [self.negate(x) for x in pos_gr_triples]
         return atom_space
 
     def get_sentence(self, grounded_subject, grounded_object=None):
-
-        # COMPLETED: Replace by input structure sentence: The !!R!! of !!S!! is !!O!!.Inlcude negative
 
         with open('data_generation/data/rel2text.pkl', 'rb') as f:
             rel2text = pickle.load(f)

@@ -45,7 +45,6 @@ my_parser.add_argument('--verbose',
 
 args = my_parser.parse_args()
 
-# TODO PARAMETERS
 test_file_dir = args.test_data_dir  # 'test_data/test.json'
 model_path = args.model_dir  # 'model/'
 max_length = args.max_length  # 512

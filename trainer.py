@@ -26,11 +26,6 @@ my_parser.add_argument('--data_dir',
                        type=str,
                        help='path to training data')
 
-# my_parser.add_argument('--val_ratio',
-#                        type=float,
-#                        default=0.1,
-#                        help='ratio of validation dataset')
-
 my_parser.add_argument('--model_arch',
                        type=str,
                        default='roberta-large',

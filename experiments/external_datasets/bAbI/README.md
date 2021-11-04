@@ -1,4 +1,4 @@
-# RuleBERT + bAbi (Under Construction)
+# RuleBERT + bAbi
 
 This file shows how to apply RuleBERT on [bAbi Task #15](https://research.fb.com/downloads/babi/).
 ## Recipe
@@ -6,15 +6,22 @@ This file shows how to apply RuleBERT on [bAbi Task #15](https://research.fb.com
 ```bash
 bash download_model.sh
 ```
-2. __Fine-tune on bAbI__
+2. __Download Data__
+The dataset can be downloaded [here](https://research.fb.com/downloads/babi/). We are interested in Task #15. Copy the files from `en_valid/` to `data/external_datasets/bAbI/`.
+3. __Fine-tune on bAbI__
 ```bash
-python trainer.py --data-dir data/external_datasets/bAbI \
-                  -- model_arch models/rulebert_161 \
-                  --epochs 3 \
-                  --verbose \
+#RuleBERT
+!python experiments/external_datasets/bAbI/run_bAbI.py --babi_dir "data/external_datasets/bAbI/" \
+                                                       --model_arch 'models/rulebert_161' \
+                                                       --epochs 3 \
+                                                       --reps 10
+#Roberta
+!python experiments/external_datasets/bAbI/run_bAbI.py --babi_dir "data/external_datasets/bAbI/" \
+                                                       --model_arch 'roberta-large' \
+                                                       --epochs 3 \
+                                                       --reps 10
 ```
-3. __Fine-tune on QQP dataset__
-
+The results are stored in `--babi_dir`.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

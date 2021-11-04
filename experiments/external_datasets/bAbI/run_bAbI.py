@@ -7,19 +7,27 @@ from tqdm import tqdm
 import json
 import argparse
 
-# TODO F1 score
-
-my_parser = argparse.ArgumentParser(description='Train Model')
+my_parser = argparse.ArgumentParser(description='Train bAbI Model')
 
 my_parser.add_argument('--babi_dir',
                        default='data/external_datasets/bAbI/',
                        type=str,
                        help='path to bAbI data')
 
+my_parser.add_argument('--model_arch',
+                       type=str,
+                       default='roberta-large',
+                       help='model used')
+
 my_parser.add_argument('--epochs',
                        default=3,
                        type=int,
                        help='number of epochs')
+
+my_parser.add_argument('--reps',
+                       default=10,
+                       type=int,
+                       help='number of repititions')
 
 my_parser.add_argument('--lr',
                        default=1.5e-5,
@@ -37,11 +45,13 @@ my_parser.add_argument('--warmup_ratio',
 
 args = my_parser.parse_args()
 
-babi_dir = args.babi_dirs
+babi_dir = args.babi_dir
+model_arch = args.model_arch
 epochs = args.epochs
+reps = args.reps
 lr = args.lr
 batch_size = args.batch_size
-warmup_ratio = args.warmip_ratio
+warmup_ratio = args.warmup_ratio
 
 
 train_file = babi_dir + 'qa15_train.txt'
@@ -143,9 +153,6 @@ train_questions, train_context, train_answers = parse_file(train_file)
 val_questions, val_context, val_answers = parse_file(val_file)
 test_questions, test_context, test_answers = parse_file(test_file)
 
-# load RuleBERT model
-rulebert_model = 'models/ruleBERT/rulebert500/'
-rulebert_trained = AutoModelForSequenceClassification.from_pretrained(rulebert_model)
 
 train_questions, train_context, train_answers = prepare_data(train_context, train_questions, train_answers)
 val_questions, val_context, val_answers = prepare_data(val_context, val_questions, val_answers)
@@ -154,16 +161,17 @@ test_questions, test_context, test_answers = prepare_data(test_context, test_que
 final_d = []
 for e in range(1, epochs + 1):
     d = {}
-    for q in range(10):
+    for q in range(reps):
 
-        print(f'Epoch {q+1}/10')
+        print(f'Epoch {q+1}/{reps}')
 
-        model_type = 'roberta-large'
-        model = AutoModelForQuestionAnswering.from_pretrained(model_type)
-        tokenizer = AutoTokenizer.from_pretrained(model_type)
-        rulebert_trained = AutoModelForSequenceClassification.from_pretrained(rulebert_model)
+        model = AutoModelForQuestionAnswering.from_pretrained('roberta-large')
+        tokenizer = AutoTokenizer.from_pretrained('roberta-large')
+
         # move rulebert encoder to roberta
-        model.roberta = rulebert_trained.roberta
+        if 'rulebert' in model_arch:
+            rulebert_trained = AutoModelForSequenceClassification.from_pretrained(model_arch)
+            model.roberta = rulebert_trained.roberta
 
         # tokenize
         train_encodings = tokenizer(train_context, train_questions, truncation=True, padding=True)
@@ -291,5 +299,4 @@ for e in range(1, epochs + 1):
         acc_ = sum(acc) / len(acc)
         d[q] = acc_
     final_d.append(d)
-# TODO Average values
-json.dump(final_d, open(f"{babi_dir}test_stats.json", "w"))
+json.dump(final_d, open(f"{babi_dir}test_stats_{model_arch.replace('/','_')}.json", "w"))
