@@ -1,12 +1,12 @@
 # RuleBERT: Teaching Soft Rules to Pre-Trained Language Models
-[(Paper)](https://arxiv.org/pdf/2109.13006.pdf)
+[(Paper)](https://aclanthology.org/2021.emnlp-main.110.pdf)
 [(Slides)](https://docs.google.com/presentation/d/1UHOJmNlRx4OiF4-hkHMqIZ1Y9Q3QEQS5XWTaxRop4pc/edit?usp=sharing)
 [(Video)](https://youtu.be/zTnA9IOIJ8k)
 
 ![RuleBERT reasons over Natural Language](RuleBERT_git_image.png)
 
 
-[RuleBERT](https://arxiv.org/pdf/2109.13006.pdf) is a pre-trained language model that has been fine-tuned on soft logical results. This repo contains the required code for running the experiments of the associated paper.
+[RuleBERT](https://aclanthology.org/2021.emnlp-main.110.pdf) is a pre-trained language model that has been fine-tuned on soft logical results. This repo contains the required code for running the experiments of the associated paper.
 
 
 
@@ -152,11 +152,20 @@ For any inquiries, feel free to [contact us](mailto:saeedm@eurecom.fr), or raise
 You can cite our work:
 
 ```
-@inproceedings{saeed2021RuleBERT,
-  title={RuleBERT: Teaching Soft Rules to Pre-Trained Language Models},
-  author={Mohammed Saeed, Naser Ahmadi, Prelav Nakov, Paolo Papotti},
-  booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP), 2021},
-  year={2021}
+@inproceedings{saeed-etal-2021-rulebert,
+    title = "{R}ule{BERT}: Teaching Soft Rules to Pre-Trained Language Models",
+    author = "Saeed, Mohammed  and
+      Ahmadi, Naser  and
+      Nakov, Preslav  and
+      Papotti, Paolo",
+    booktitle = "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing",
+    month = nov,
+    year = "2021",
+    address = "Online and Punta Cana, Dominican Republic",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.emnlp-main.110",
+    pages = "1460--1476",
+    abstract = "While pre-trained language models (PLMs) are the go-to solution to tackle many natural language processing problems, they are still very limited in their ability to capture and to use common-sense knowledge. In fact, even if information is available in the form of approximate (soft) logical rules, it is not clear how to transfer it to a PLM in order to improve its performance for deductive reasoning tasks. Here, we aim to bridge this gap by teaching PLMs how to reason with soft Horn rules. We introduce a classification task where, given facts and soft rules, the PLM should return a prediction with a probability for a given hypothesis. We release the first dataset for this task, and we propose a revised loss function that enables the PLM to learn how to predict precise probabilities for the task. Our evaluation results show that the resulting fine-tuned models achieve very high performance, even on logical rules that were unseen at training. Moreover, we demonstrate that logical notions expressed by the rules are transferred to the fine-tuned model, yielding state-of-the-art results on external datasets.",
 }
 ```
 
