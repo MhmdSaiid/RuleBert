@@ -1,5 +1,5 @@
 # RuleBERT + Negated LAMA 
-This file shows how to apply rulebert on the [Negated Lama Dataset](https://github.com/facebookresearch/LAMA).
+This file shows how to apply rulebert on the [Negated LAMA Dataset](https://github.com/facebookresearch/LAMA).
 ## Recipe
 1. __Download RuleBERT Model__
 
@@ -32,7 +32,7 @@ tokenizer.save_pretrained('models/rulebert_161_mlm')
    The code can be found [here](https://github.com/facebookresearch/LAMA). At of the time of this paper, there was no hugging-face connector for the roberta model. We provide ```rulebert_connector.py``` as the file to be used for integration. The following table shows the results for the HuggingFace (HF) Roberta connector and FairSeq Roberta Connector. 
 
 | Dataset | HF Roberta (ρ)| Fairseq Roberta (ρ)| HF Roberta (%) | Fairseq Roberta (%)|
-| --- | ----------- |  ----------- |  ----------- |  ----------- |
+| --- | :-----------: |  :-----------: |  :-----------: |  :-----------: |
 | `Google-RE birth-place` |  90.99  |90.99   | 18.51 |18.51|
 | `Google-RE birth-date `|  82.87  |82.87   | 1.4 |1.4|
 | `Google-RE death-place` |  86.44  |86.44   | 0.31 |0.31|
