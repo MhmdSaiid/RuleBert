@@ -16,8 +16,7 @@ data/RuleBERT_Datasets.zip
 temp
 Untitled*
 DG Test.ipynb
-lpmln
-lpmln/**
+
 rules_json_chaining
 old
 *.csv
@@ -36,3 +35,5 @@ data_generation/data/generated/single/spouse(A,B):-child(A,B)._20211026T101712/t
 data_generation/data/generated/chain/chain_rules_20211026T102041/val.jsonl
 data_generation/data/generated/chain/chain_rules_20211026T102041/train.jsonl
 data_generation/data/generated/chain/chain_rules_20211026T102041/test.jsonl
+ConstantDepths.zip
+ConstantDepths/**

@@ -1,0 +1,16 @@
+To add new version of SDD lib:
+
+* Make sure you have the following installed:
+ - python3-dev
+ - swig
+ 
+* Get the latest libsdd.so and paste it in .. folder (the lib folder containing this one)
+
+* Run the following commands:
+ - swig -python sdd.i
+ - python3 setup.py
+ 
+* Copy sdd.py to directory above
+ - cp sdd.py ../sdd.py
+
+
