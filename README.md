@@ -22,8 +22,9 @@ cd RuleBERT
 ### 1. Create virtual env and install reqs
 
 ```bash
-(optional) virtualenv -m python RuleBERT
-pip install -r requirements.txt
+conda create -n rulebert python=3.7
+conda activate rulebert
+bash install.sh
 ```
 
 ### 2. Download Data
@@ -91,6 +92,7 @@ python DataGeneration.py
        --pool_list "[['Anne', 'Bob', 'Charlie'],
                     ['Frank', 'Gary', 'Paul']]" 
        --rule_support 0.67
+       --max_num_facts 2
 ```
 * `--rule` : The rule in string format. Consult here to see how to write a rule.
 * `--pool_list` : For every variable in the rule, we include a list of possible instantiations.

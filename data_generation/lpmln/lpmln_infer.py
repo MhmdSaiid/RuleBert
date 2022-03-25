@@ -1,3 +1,10 @@
+#! /home/barbacou/miniconda3/envs/rulebert/bin/python
+#! /home/barbacou/miniconda3/envs/rulebert/bin/python
+#! /home/barbacou/miniconda3/envs/env_lpmln/bin/python
+#! /home/barbacou/miniconda3/envs/env_lpmln/bin/python
+#! /home/barbacou/miniconda3/envs/env_lpmln/bin/python
+#! /home/barbacou/miniconda3/envs/env_lpmln/bin/python
+#! /home/barbacou/miniconda3/envs/env_lpmln/bin/python
 #! /home/barbacou/miniconda3/bin/python
 import argparse
 import os

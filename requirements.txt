@@ -1,5 +1,4 @@
-clingo==5.5.0.post3
-clyngor==0.3.31
+clyngor
 Cython==0.29.24
 numpy==1.19.2
 scikit_learn==1.0.1

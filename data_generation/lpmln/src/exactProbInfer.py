@@ -106,6 +106,10 @@ class exactProbInfer(object):
                 for model in value:
                     lim += Node.probDict[model]
                 if not lim == 0:
+                    key = tuple([k.string.replace("'",'"') for k in key])
+                    import json
+                    key = json.dumps(key)
+                    key = key.replace('[','(').replace(']',')')                    
                     if len(key) == 1:
                         print('%s(%s) : %s' % (k, key[0], lim))
                         printed_symbol.append(clingo.Function(k,[key[0]]))
@@ -114,7 +118,11 @@ class exactProbInfer(object):
                         printed_symbol.append(clingo.Function(k,[]))
                     else:
                         print('%s%s : %s' % (k, key, lim))
+                        
+                        #print(k+str(key))
+                        #print(clingo.parse_term(k+str(key)))
                         printed_symbol.append(clingo.parse_term(k + str(key)))
+        #print('JJJJJ',self.grounded_query[0])
         for grounded_query_atom in self.grounded_query:
             if grounded_query_atom not in printed_symbol:
                 print('%s : %s' % (grounded_query_atom, 0))
