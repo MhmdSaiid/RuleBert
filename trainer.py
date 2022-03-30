@@ -12,7 +12,7 @@ from transformers import AdamW
 from transformers import get_linear_schedule_with_warmup
 
 from tqdm import tqdm
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, set_seed
 from copy import deepcopy
 import time
 from data_generation.src.utils import format_time, flat_accuracy, confidence_accuracy
@@ -81,6 +81,11 @@ my_parser.add_argument('--time_step_size',
                        default=100,
                        help='Step Size for time')
 
+my_parser.add_argument('--seed',
+                       type=int,
+                       default=None,
+                       help='Random Seed for Reproducibility')
+
 args = my_parser.parse_args()
 
 data_dir = args.data_dir  # 'train_data/'
@@ -96,6 +101,15 @@ warmup_ratio = args.warmup_ratio  # 0.06
 verbose = args.verbose  # True
 hard_rule = args.hard_rule  # False
 time_step_size = args.time_step_size  # 100
+seed = args.seed
+
+if seed:
+    set_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    if torch.cuda.is_available(): torch.cuda.manual_seed_all(seed)
+    torch.manual_seed(seed)
+
+
 
 
 # true_file = data_dir + 'true.json'
@@ -383,7 +397,6 @@ print("Training complete!")
 
 print("Total training took {:} (h:mm:ss)".format(total_train_time))
 
-model_arch = 'roberta-large'
 
 training_stats.append({'hyperparameters': {'max_length': max_length,
                                            'batch_size': batch_size,
