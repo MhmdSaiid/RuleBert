@@ -87,7 +87,7 @@ cd data_generation
 There are two ways to data for a single rule:
 #### i) Pass Data through Arguments
 ```bash
-python DataGeneration.py 
+python data_generation/DataGeneration.py 
        --rule 'spouse(A,B) :- child(A,B).' 
        --pool_list "[['Anne', 'Bob', 'Charlie'],
                     ['Frank', 'Gary', 'Paul']]" 
